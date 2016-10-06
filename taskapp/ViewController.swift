@@ -14,7 +14,7 @@ class ViewController: UIViewController,UITableViewDataSource, UISearchBarDelegat
     
     
     let realm = try! Realm()
-    let taskArray = try! Realm().objects(Task).sorted("date", ascending: false)
+    var taskArray = try! Realm().objects(Task).sorted("date", ascending: false)
         
         override func viewDidLoad() {
             super.viewDidLoad()
@@ -24,7 +24,6 @@ class ViewController: UIViewController,UITableViewDataSource, UISearchBarDelegat
     
         override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        tableView.reloadData()
     }
     
         override func didReceiveMemoryWarning() {
@@ -96,7 +95,13 @@ class ViewController: UIViewController,UITableViewDataSource, UISearchBarDelegat
     //課題
     
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
-        print(searchBar.text)
+        if(searchBar.text != "") {
+            let predicate = NSPredicate(format: "category = %@", searchBar.text!)
+            //ここには自分で保存したカテゴリーに匹敵したデータだけが格納される
+            taskArray = realm.objects(Task).filter(predicate)
+            print(taskArray)
+            tableView.reloadData()
+        }
     }
     
         

@@ -21,6 +21,7 @@ class InputViewController: UIViewController {
         titleText.text = task.title
         contentsText.text = task.contents
         datePicker.date = task.date
+        category.text = task.category
     }
     
     override func didReceiveMemoryWarning() {
