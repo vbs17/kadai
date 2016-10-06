@@ -7,14 +7,14 @@ class InputViewController: UIViewController {
     @IBOutlet weak var titleText: UITextField!
     @IBOutlet weak var contentsText: UITextView!
     @IBOutlet weak var datePicker: UIDatePicker!
+    //追加
+    @IBOutlet weak var category: UITextField!
     
     let realm = try! Realm()
     var task:Task!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // 背景をタップしたらdismissKeyboardメソッドを呼ぶように設定する
         let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target:self, action:#selector(dismissKeyboard))
         self.view.addGestureRecognizer(tapGesture)
         
@@ -25,7 +25,6 @@ class InputViewController: UIViewController {
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -33,14 +32,44 @@ class InputViewController: UIViewController {
             self.task.title = self.titleText.text!
             self.task.contents = self.contentsText.text
             self.task.date = self.datePicker.date
+            //追加
+            self.task.category = self.category.text!
             self.realm.add(self.task, update: true)
         }
-        
+        setNotification(task)
+
         super.viewWillDisappear(animated)
     }
     
     func dismissKeyboard(){
-        // キーボードを閉じる
         view.endEditing(true)
     }
+    
+    
+    func setNotification(task: Task) {
+        for notification in UIApplication.sharedApplication().scheduledLocalNotifications! {
+            if notification.userInfo!["id"] as! Int == task.id {
+                UIApplication.sharedApplication().cancelLocalNotification(notification)
+                break
+            }
+        }
+        
+        let notification = UILocalNotification()
+        
+        notification.fireDate = task.date
+        notification.timeZone = NSTimeZone.defaultTimeZone()
+        notification.alertBody = "\(task.title)"
+        notification.soundName = UILocalNotificationDefaultSoundName
+        notification.userInfo = ["id":task.id]
+        UIApplication.sharedApplication().scheduleLocalNotification(notification)
+        
+    }
 }
+
+
+
+
+
+
+
+

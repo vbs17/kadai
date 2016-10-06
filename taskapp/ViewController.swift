@@ -8,10 +8,12 @@ import RealmSwift
 class ViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
+    //追加
+    @IBOutlet weak var search: UISearchBar!
     
     let realm = try! Realm()
-    //データの一覧取得　　　　並べ替えして配列を取得
-    //taskArrayはデータベースに追加や削除される度に自動で更新される
+    //各ユーザーのタスクデータがある
+    //データの一覧を取得するにはRealmクラスのobjects:メソッドでクラスを指定
     let taskArray = try! Realm().objects(Task).sorted("date", ascending: false)
         
         override func viewDidLoad() {
@@ -56,6 +58,15 @@ class ViewController: UIViewController {
         
        
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {if editingStyle == UITableViewCellEditingStyle.Delete {
+        let task = taskArray[indexPath.row]
+        
+        for notification in UIApplication.sharedApplication().scheduledLocalNotifications! {
+            if notification.userInfo!["id"] as! Int == task.id {
+                UIApplication.sharedApplication().cancelLocalNotification(notification)
+                break
+            }
+        }
+
         try! realm.write {
             self.realm.delete(self.taskArray[indexPath.row])
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
@@ -80,8 +91,28 @@ class ViewController: UIViewController {
         }
     }
     
+    //課題
     
-    
+    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+        
+        search.endEditing(true)
+        
+        var taskcategory = realm.objects(Task).filter("")
+        
+        if(search.text != "") {
+            let predicate = NSPredicate(format: "category = %@", search.text!)
+            taskcategory = realm.objects(Task).filter(predicate)
+        }
+        
+        do {
+            
+        } catch {
+            print(error)
+        }
+        
+       
+        tableView.reloadData()
+    }
     
     
     
