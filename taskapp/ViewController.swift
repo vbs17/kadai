@@ -20,10 +20,13 @@ class ViewController: UIViewController,UITableViewDataSource, UISearchBarDelegat
             super.viewDidLoad()
             //追加
             search.delegate = self
+            
+            
         }
     
         override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+            tableView.reloadData()
     }
     
         override func didReceiveMemoryWarning() {
