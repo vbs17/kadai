@@ -75,7 +75,7 @@
                     </navigationItem>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                     <connections>
-                        <outlet property="search" destination="kty-V1-zIT" id="W0g-Ca-6Jb"/>
+                        <outlet property="search" destination="kty-V1-zIT" id="J84-oy-uJn"/>
                         <outlet property="tableView" destination="kty-V1-zIT" id="YmV-Be-p5s"/>
                         <segue destination="ed5-6I-wHz" kind="show" identifier="cellSegue" id="rDo-lS-BIR"/>
                     </connections>

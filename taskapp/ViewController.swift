@@ -5,19 +5,21 @@ import UIKit
 import RealmSwift
 
 
-class ViewController: UIViewController {
+class ViewController: UIViewController,UITableViewDataSource, UISearchBarDelegate{
     
     @IBOutlet weak var tableView: UITableView!
     //追加
     @IBOutlet weak var search: UISearchBar!
+
+    
     
     let realm = try! Realm()
-    //各ユーザーのタスクデータがある
-    //データの一覧を取得するにはRealmクラスのobjects:メソッドでクラスを指定
     let taskArray = try! Realm().objects(Task).sorted("date", ascending: false)
         
         override func viewDidLoad() {
             super.viewDidLoad()
+            //追加
+            search.delegate = self
         }
     
         override func viewWillAppear(animated: Bool) {
@@ -94,25 +96,12 @@ class ViewController: UIViewController {
     //課題
     
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
-        
-        search.endEditing(true)
-        
-        var taskcategory = realm.objects(Task).filter("")
-        
-        if(search.text != "") {
-            let predicate = NSPredicate(format: "category = %@", search.text!)
-            taskcategory = realm.objects(Task).filter(predicate)
-        }
-        
-        do {
-            
-        } catch {
-            print(error)
-        }
-        
-       
-        tableView.reloadData()
+        print(searchBar.text)
     }
+    
+        
+        
+    
     
     
     
